@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/main.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="general-container">
+        <nav class="navigator">
+            <h2 class="myTitle">
+                <a href="/">Rick&Morty</a>
+            </h2>
+            <ul class="list">
+                <li><a href="https://rickandmortyapi.com/">Docs</a></li>
+                <li><a href="#">About Us</a></li>
+            </ul>
+        </nav>
+        <h1>The Rick&Morty Bible</h1>
+        
+        <form method="post" id="myForm">
+            <div class="inputs">
+                <div class="data">
+                    <label for="id">Get from ID:</label>
+                    <input type="number" name="id" id="id" min="1" placeholder="Enter ID">
+                </div>
+                
+                <div class="data">
+                    <label for="name">Name:</label>
+                    <input type="text" name="name" id="name" placeholder="Type a Name">
+                </div>
+                <div class="data">
+                    <label for="status">Status:</label>
+                    <input type="text" name="status" id="status" placeholder='"Alive", "Dead" or "Unknown"'>
+
+                </div>
+                <div class="data">
+                    <label for="gender">Gender:</label>
+                    <input type="text" name="gender" id="gender" placeholder='"Female", "Male", "Genderless" or "Unknown"'>
+
+                </div>                
+            </div>
+            
+            <div class="send-option">
+                <label for="search">Type:</label>
+                <div class="options">
+                    <input type="submit" id="character" value="Character" formaction="/character">
+                    <input type="submit" id="planet" value="Location" formaction="/planet">
+                    <input type="submit" id="episode" value="Episode" formaction="/episode">
+                </div>
+            </div>
+        </form>
+        
+        <div class="response">
+            <% if(!locals.content) { %>
+                <h2 class="results">
+                    Fill the requirements and select a search type
+                </h2>
+            <% } else { %>
+                    <!-- ----- FILTER CHARACTER ----- -->
+                    <% if(locals.character && content.gender) { %>
+                        <div class="cards">
+                            <img src=<%= content.image %> alt="Character photo">
+                                <ul class="response-data">
+
+                                    <div class="first-row">
+                                        <li class="title">
+                                            <h2>
+                                                <%= content.name %>    
+                                            </h2>
+                                        </li>
+                                        <li class="status-specie">
+                                            <%= content.status %> - <%= content.species %>
+                                        </li>
+                                    </div>
+
+                                    <div class="second-row">
+                                        <h5>
+                                            Last known location:
+                                        </h5>
+                                        <li>
+                                            <%= content.location.name %>
+                                        </li>
+                                    </div>
+
+                                    <div class="third-row">
+                                        <h5>
+                                            First seen:
+                                        </h5>
+                                        <li>
+                                            <%= firstSeen.name %>
+                                        </li>
+                                    </div>                                    
+                                </ul>
+                        </div>
+
+                <!-- ----- ARRAY OF CHARACTERS ----- -->
+                    <% } else if(locals.character && content.results) { %>
+                        <% const totalCharacter = content.results %>
+                    <div class="wrap">
+                        <h2 class="results">Total Results: <%= content.info.count %></h2>
+                    
+                        <div class="cards-lot">
+                            <% totalCharacter.forEach(async (character) => { %>
+                                <div class="card-unit">
+                                    <img src=<%= character.image %> alt="Character Photo">
+                                    <ul class="information">
+                                        <div class="first-row">
+                                            <li class="title">
+                                                <h2>
+                                                    <%= character.name %>    
+                                                </h2>
+                                            </li>
+                                            <li class="status-specie">
+                                                <%= character.status %> - <%= character.species %>
+                                            </li>
+                                        </div>
+                                        
+                                        <div class="second-row">
+                                            <h5>
+                                                Last known location:
+                                            </h5>
+                                            <li>
+                                                <%= character.location.name %>
+                                            </li>
+                                        </div>
+                                        
+                                        <div class="third-row">
+                                            <h5>
+                                                Gender:
+                                            </h5>
+                                            <li>
+                                                <%= character.gender %>
+                                            </li>
+                                        </div>
+                                    </ul>
+                                </div>
+                                <% }) %>
+                        </div>
+                    </div>
+                    
+                <!-- ----- FILTER LOCATION ----- -->
+                    <% } else if(locals.location && content.dimension) { %>
+                        <div class="cards-no-image">
+                            <ul class="response-data">
+                                <div class="first-row">
+                                    <li class="title">
+                                        <h2>
+                                            <%= content.name %>
+                                        </h2>
+                                    </li>
+                                    <li class="status-specie">
+                                        <%= content.type %>
+                                    </li>
+                                </div>
+
+                                <div class="second-row">
+                                    <h4 class="title">
+                                        Dimension:
+                                    </h4>
+                                    <li>
+                                        <%= content.dimension %>
+                                    </li>
+                                </div>
+                                <div class="third-row">
+                                    <h4 class="title">
+                                        Residents:
+                                    </h4>
+                                    <li>
+                                        <%= content.residents.length %>
+                                    </li>
+                                </div>
+                            </ul>
+                        </div>
+                
+                <!-- ----- ARRAY OF LOCATIONS ----- -->
+                    <% } else if(locals.location && content.results) { %>
+                        <% const totalPlanets = content.results %>
+                        
+                        <div class="wrap">
+                            <h2 class="results">
+                                Total Results:
+                                <%= content.info.count %>
+                            </h2>
+                        
+                            <div class="cards-no-image-lot">
+                                
+                                <% totalPlanets.forEach((planet) => { %>
+                                    <div class="no-card-unit">
+
+                                        <ul class="response-data">
+                                            <div class="first-row">
+                                                <h2 class="title">
+                                                    <%= planet.name %>
+                                                </h2>
+                                                <li class="status-specie">
+                                                    <%= planet.type %>
+                                                </li>
+                                            </div>
+                                            
+                                            <div class="second-row">
+                                                <h4 class="title">
+                                                    Dimension:
+                                                </h4>
+                                                <li>
+                                                    <%= planet.dimension %>
+                                                </li>
+                                            </div>
+                                            
+                                            <div class="third-row">
+                                                <h4 class="title">
+                                                    Residents:
+                                                </h4>
+                                                <li>
+                                                    <%= planet.residents.length  %>
+                                                </li>
+                                            </div>
+                                        </ul>
+                                    </div>
+                                    
+                                <% }) %>
+                            </div>
+                        </div>
+
+                <!-- ----- FILTER EPISODE ----- -->
+                    <% } else if(locals.capitule && content.episode) { %>
+                        <div class="cards-no-image">
+
+                            <ul class="response-data">
+                                <div class="first-row">
+                                    <h2 class="title">
+                                        <%= content.name %>
+                                    </h2>
+                                    <li class="status-specie">
+                                        <%= content.air_date %>
+                                    </li>
+                                </div>
+                                <div class="second-row">
+                                    <h2 class="title">
+                                        Episode:
+                                    </h2>
+                                    <li>
+                                    <%= content.episode %>
+                                    </li>
+                                </div>
+                                <div class="third-row">
+                                    <h2 class="title">
+                                        Cast Number:
+                                    </h2>
+                                    <li>
+                                        <%= content.characters.length %> characters
+                                    </li>
+                                </div>
+                            </ul>
+                        </div>
+
+                <!-- ----- ARRAY OF EPISODES ----- -->
+                    <% } else if(locals.capitule &&  content.results) { %>
+                        <% const totalEpisode = content.results %>
+
+                        <div class="wrap">
+                            <h2 class="results">
+                                Total Results: 
+                                <%= content.info.count %> 
+                            </h2> 
+
+                            <div class="cards-no-image-lot">
+
+                                <% totalEpisode.forEach((episode) => { %>
+                                    <div class="no-card-unit">
+
+                                        <ul class="response-data">
+                                            <div class="first-row">
+                                                <h2 class="title">
+                                                    <%= episode.name %>
+                                                </h2>
+                                                <li class="status-specie">
+                                                    <%= episode.air_date %>
+                                                </li>
+                                            </div>
+
+                                            <div class="second-row">
+                                                <h4 class="title">
+                                                    Episode:
+                                                </h4>
+                                                <li>
+                                                    <%= episode.episode %>
+                                                </li>
+                                            </div>
+
+                                            <div class="third-row">
+                                                <h4 class="title">
+                                                    Cast conformed by:
+                                                </h4>
+                                                <li>
+                                                    <%= `${episode.characters.length} characters` %>
+                                                </li>
+                                            </div>
+                                        </ul>
+                                    </div>
+                                <% }) %>
+                            </div>
+                        </div>
+                            
+                            <% } else { %>
+                                    <h4>No hay contenido disponible</h4>
+                                    <% } %>
+                                    <% } %>
+        </div>
+        
+    </div>
+</body>
+</html>
