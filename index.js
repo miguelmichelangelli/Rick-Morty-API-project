@@ -34,25 +34,43 @@ app.post('/character', async (req, res) => {
 
         if(id) {
             seen = await axios.get(character.data.episode[0])
+            seen = seen.data
+
         } else {
-            
+            // arreglo de objetos que coincidan con los parametros dados
+            const charsArr = character.data.results
 
-            let epi = character.data.results.map( ep => axios.get(ep.episode[0]))
+            // guardamos en un nuevo arreglo el primer url del arreglo
+            // de la propiedad episode, que representa el primer
+            // episodio en el que apareció el personaje
+            const urlsArr = charsArr.map(char => char.episode[0])
 
-            seen = await Promise.all(epi)
+            // consumimos todas las apis del arreglo urlsArr con Promise.all
+            // y las gaurdamos en un nuevo arreglo
+            const myData = await Promise.all(urlsArr.map(url => axios.get(url)))
 
-            console.log(seen.data)
+            // arreglo con el nombre del primer episodio en el que aparece
+            // el personaje que coincida con la búsqueda, se obtiene a 
+            // partir de las apis recien consumidas 
+            const episodesArr = myData.map(episode => episode.data.name)
+
+            let defArr = []
+
+            // en un nuevo arreglo guardamos el arreglo que contiene
+            // a los personajes y agregamos la propiedad episodea cada personaje
+            charsArr.forEach((char, index) => {
+                defArr.push({
+                    ...char,
+                    capName: episodesArr[index]
+                })
+            })
+
+            seen = defArr
         }
-
-        // PRUEBAS
-        // console.log(`Episode object: ${seen}`)
-        // console.log('Object: ' + JSON.stringify(character.data))
-        // console.log('ID:' + id)
-        // console.log(typeof character.data)
 
         res.render('index.ejs', { 
             content: character.data,
-            firstSeen: seen.data,
+            firstSeen: seen,
             character: true })
     
     } catch(err) {

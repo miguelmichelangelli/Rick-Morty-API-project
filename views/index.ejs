@@ -100,9 +100,9 @@
                         <% const totalCharacter = content.results %>
                     <div class="wrap">
                         <h2 class="results">Total Results: <%= content.info.count %></h2>
-                    
+
                         <div class="cards-lot">
-                            <% totalCharacter.forEach(async (character) => { %>
+                            <% totalCharacter.forEach(async (character, index) => { %>
                                 <div class="card-unit">
                                     <img src=<%= character.image %> alt="Character Photo">
                                     <ul class="information">
@@ -128,10 +128,10 @@
                                         
                                         <div class="third-row">
                                             <h5>
-                                                Gender:
+                                                First seen in:
                                             </h5>
                                             <li>
-                                                <%= character.gender %>
+                                                <%= firstSeen[index].capName %>
                                             </li>
                                         </div>
                                     </ul>
@@ -163,6 +163,7 @@
                                         <%= content.dimension %>
                                     </li>
                                 </div>
+
                                 <div class="third-row">
                                     <h4 class="title">
                                         Residents:
@@ -218,7 +219,6 @@
                                             </div>
                                         </ul>
                                     </div>
-                                    
                                 <% }) %>
                             </div>
                         </div>
@@ -236,6 +236,7 @@
                                         <%= content.air_date %>
                                     </li>
                                 </div>
+
                                 <div class="second-row">
                                     <h2 class="title">
                                         Episode:
@@ -244,6 +245,7 @@
                                     <%= content.episode %>
                                     </li>
                                 </div>
+
                                 <div class="third-row">
                                     <h2 class="title">
                                         Cast Number:
@@ -302,11 +304,10 @@
                                 <% }) %>
                             </div>
                         </div>
-                            
                             <% } else { %>
-                                    <h4>No hay contenido disponible</h4>
-                                    <% } %>
-                                    <% } %>
+                                <h4>No hay contenido disponible</h4>
+                            <% } %>
+                <% } %>
         </div>
         
     </div>
